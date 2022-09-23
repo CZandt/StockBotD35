@@ -1,4 +1,10 @@
 # final_project
+
+# TO DO 
+# 1. REMOVE SHORT SELL PRINTS
+# 2. PROVIDE OPTION TO REMOVE PRINT STATEMENTS
+# 3. WAY TO COMPARE TICKERS
+# 4. PUSH RECCOMENDATIONS MORE BOLDY
 import json
 from operator import attrgetter
 from turtle import color  # imports the json module
@@ -8,7 +14,7 @@ import os  # imports the OS module
 import time  # imports the time module so that alphavantage wont throw a fit
 from termcolor import colored #imports termcolor for the text
 
-tickers = ['SPY', 'EXPD', 'TSLA', 'AAPL', 'MSFT', 'NVDA', 'AMD', 'BB', 'SPOT']  # lists out the tickers that the program uses
+tickers = ['TGT', 'DOCU', 'ETSY']#['SPY', 'EXPD', 'TSLA', 'AAPL', 'MSFT', 'NVDA', 'AMD', 'BB', 'SPOT']  # lists out the tickers that the program uses
 
 
 def saveResults(results):  # Function to save results to json file
