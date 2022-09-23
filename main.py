@@ -1,12 +1,14 @@
 # final_project
-import json  # imports the json module
+import json
+from operator import attrgetter
+from turtle import color  # imports the json module
 import requests  # imports requests
 import statistics as stat  # imports stat module for math calculations
 import os  # imports the OS module
 import time  # imports the time module so that alphavantage wont throw a fit
+from termcolor import colored #imports termcolor for the text
 
-tickers = ['SPY', 'EXPD', 'TSLA', 'AAPL', 'MSFT', 'NVDA', 'AMD', 'BB', 'SPOT',
-           'SPCE']  # lists out the tickers that the program uses
+tickers = ['SPY', 'EXPD', 'TSLA', 'AAPL', 'MSFT', 'NVDA', 'AMD', 'BB', 'SPOT']  # lists out the tickers that the program uses
 
 
 def saveResults(results):  # Function to save results to json file
@@ -94,7 +96,7 @@ def meanReversionStrategy(price, ticker):  # Function that contains the meanReve
                 tProfit = current_price - buy
                 tProfit = round(tProfit, 2)
 
-                rProfit += tProfit
+                #rProfit += tProfit
 
                 print('Short Selling at:', current_price)
                 print('Trade profit:', tProfit)
@@ -130,17 +132,17 @@ def meanReversionStrategy(price, ticker):  # Function that contains the meanReve
     print(f'{ticker} MR Total Profit: {rProfit}')  # displays  the total profit of all the trades
     print('Stoplosses Triggered:', stoplosses)
     print('First Buy:', firstbuy)  # prints what the price of the first buy was
-    print(f'{ticker} MR Percentage returns: {returnPer}%')  # prints what the total return percent
+    print(colored(f'{ticker} MR Percentage returns: {returnPer}%', 'green', attrs=['bold']))  # prints what the total return percent
     if suggestion != []:  # if a suggestion had occured
         try:
-            print('Today the strategy suggests to', suggestion[0], 'and',
-                  suggestion[1])  # prints out what the suggestion is
+            print('Today the strategy suggests to', suggestion[0], 'and', suggestion[1])  # prints out what the suggestion is
         except:
-            print('Today the strategy suggests to',
-                  suggestion[0])  # if only one suggestion is given then this will work so it isnt gonna crash
+            print('Today the strategy suggests to', suggestion[0])  # if only one suggestion is given then this will work so it isnt gonna crash
     else:
         print('Today the strategy suggests to do nothing')  # if no suggestion it prints that it suggests to do nothing
-    print('Hold Return ', dayEndValue - dayZeroValue, 'Percent: ', ((dayEndValue / dayZeroValue) - 1) * 100,'%' )
+    print('Hold Return ', round(dayEndValue - dayZeroValue,2), 'Percent: ', round(((dayEndValue / dayZeroValue) - 1) * 100,2),'%' )
+    if (returnPer > ((dayEndValue / dayZeroValue) - 1) * 100) :
+        print(colored('OUTPERFORMS HOLD', 'red', attrs=['bold']))
     print('----------------------')
 
     return returnPer, rProfit, suggestion  # returns the return percentage and Rolling profit and the suggestion out of the function
@@ -161,6 +163,8 @@ def simpleMovingAverageStrategy(price, ticker):  # defines the simpleMovingAvera
     lastSell = 0  # records what day the last sell was
     lastSSBuy = 0  # records what day the last short sell buy was
     stoplosses = 0
+    dayZeroValue = 0
+    dayEndValue = 0
 
     for current_price in price:  # for each price in the price list it goes through this equation
 
@@ -190,7 +194,7 @@ def simpleMovingAverageStrategy(price, ticker):  # defines the simpleMovingAvera
                     print('Short sell at:', current_price)  # prints what the price of the trade is
                     print('Short sell profit:', tProfit)  # prints the profit for the trade
 
-                    rProfit += tProfit  # adds the profit from the trade to rolling total
+                    #rProfit += tProfit  # adds the profit from the trade to rolling total
 
                     sell = 0  # resets the sale price to 0 for the next round of short selling
 
@@ -223,12 +227,17 @@ def simpleMovingAverageStrategy(price, ticker):  # defines the simpleMovingAvera
                 tProfit = current_price - buy
                 tProfit = round(tProfit, 2)
 
-                rProfit += tProfit
+                #rProfit += tProfit REMOVES SHORT SELLING FROM OVERALL TOTAL
 
                 print('Short Selling at:', current_price)
                 print('Trade profit:', tProfit)
                 stoplosses += 1
                 buy = 0
+
+        if (day == 0): # checks if the first day is the one being analyzed
+            dayZeroValue = current_price #sets the day one price to the current price
+
+        dayEndValue = current_price #keeps track of the final price used
 
         day += 1  # adds 1 to the day counter so it moves to the next day
     lastOperation = [lastBuy, lastSSSell, lastSell, lastSSBuy]
@@ -247,16 +256,17 @@ def simpleMovingAverageStrategy(price, ticker):  # defines the simpleMovingAvera
     print('----------------------')
     print(f'{ticker} SMA Total Profit:', rProfit)  # displays  the total profit of all the trades
     print('First Buy:', firstbuy)  # prints what the price of the first buy was
-    print(f'{ticker} SMA Percentage returns: {returnPer}%')  # prints what the total return percent
+    print(colored(f'{ticker} SMA Percentage returns: {returnPer}%', 'green', attrs=['bold']))  # prints what the total return percent
     if suggestion != []:  # if a suggestion had occured
         try:
-            print('Today the strategy suggests to', suggestion[0], 'and',
-                  suggestion[1])  # prints out what the suggestion is
+            print('Today the strategy suggests to', suggestion[0], 'and', suggestion[1])  # prints out what the suggestion is
         except:
-            print('Today the strategy suggests to',
-                  suggestion[0])  # if only one suggestion is given then this will work so it isnt gonna crash
+            print('Today the strategy suggests to', suggestion[0])  # if only one suggestion is given then this will work so it isnt gonna crash
     else:
         print('Today the strategy suggests to do nothing')  # if no suggestion it prints that it suggests to do nothing
+    print('Hold Return ', round(dayEndValue - dayZeroValue,2), 'Percent: ', round(((dayEndValue / dayZeroValue) - 1) * 100,2),'%' )
+    if (returnPer > ((dayEndValue / dayZeroValue) - 1) * 100) :
+        print(colored('OUTPERFORMS HOLD', 'red', attrs=['bold']))
     print('----------------------')
 
     return returnPer, rProfit, suggestion  # returns the return percentage and Rolling profit and the suggestion out of the function
@@ -276,6 +286,8 @@ def bollingerBondsStrategy(price, ticker):
     lastSell = 0  # records what day the last sell was
     lastSSBuy = 0  # records what day the last short sell buy was
     stoplosses = 0
+    dayZeroValue = 0
+    dayEndValue = 0
 
     for current_price in price:  # for each price in the price list it goes through this equation
 
@@ -307,7 +319,7 @@ def bollingerBondsStrategy(price, ticker):
                     print('Short sell at:', current_price)  # prints what price the action is taken at
                     print('Short sell profit:', tProfit)  # Prints out the profit for the trade
 
-                    rProfit += tProfit  # adds the profit to the rolling total of profit
+                    #rProfit += tProfit  # adds the profit to the rolling total of profit
 
                     sell = 0  # resets the sale price to 0 for the next round of short selling
 
@@ -338,13 +350,19 @@ def bollingerBondsStrategy(price, ticker):
                 tProfit = current_price - buy
                 tProfit = round(tProfit, 2)
 
-                rProfit += tProfit
+                #rProfit += tProfit
 
                 print('Short Selling at:', current_price)
                 print('Trade profit:', tProfit)
                 stoplosses += 1
                 buy = 0
                 lastSell = day
+
+        if (day == 0): # checks if the first day is the one being analyzed
+            dayZeroValue = current_price #sets the day one price to the current price
+
+        dayEndValue = current_price #keeps track of the final price used
+
         day += 1  # adds 1 to the day counter so it moves to the next day
 
     lastOperation = [lastBuy, lastSSSell, lastSell, lastSSBuy]
@@ -364,21 +382,26 @@ def bollingerBondsStrategy(price, ticker):
     print('----------------------')
     print(f'{ticker} Bollinger Bonds Total Profit:', rProfit)  # displays  the total profit of all the trades
     print('First Buy:', firstbuy)  # prints what the price of the first buy was
-    print(f'{ticker} Bollinger Bonds Percentage returns: {returnPer}%')  # prints what the total return percent
+    print(colored(f'{ticker} Bollinger Bonds Percentage returns: {returnPer}%', 'green', attrs=['bold']))  # prints what the total return percent
     if suggestion != []:  # if a suggestion had occured
         try:
-            print('Today the strategy suggests to', suggestion[0], 'and',
-                  suggestion[1])  # prints out what the suggestion is
+            print('Today the strategy suggests to', suggestion[0], 'and', suggestion[1])  # prints out what the suggestion is
         except:
-            print('Today the strategy suggests to',
-                  suggestion[0])  # if only one suggestion is given then this will work so it isnt gonna crash
+            print('Today the strategy suggests to', suggestion[0])  # if only one suggestion is given then this will work so it isnt gonna crash
     else:
         print('Today the strategy suggests to do nothing')  # if no suggestion it prints that it suggests to do nothing
     print('Stoplosses triggered:', stoplosses)
+    print('Hold Return ', round(dayEndValue - dayZeroValue,2), 'Percent: ', round(((dayEndValue / dayZeroValue) - 1) * 100,2),'%' )
+    if (returnPer > ((dayEndValue / dayZeroValue) - 1) * 100) :
+        print(colored('OUTPERFORMS HOLD', 'red', attrs=['bold']))
     print('----------------------')
 
     return returnPer, rProfit, suggestion  # returns the return percentage and Rolling profit and the suggestion out of the function
 
+## ADD NEW FUNCTIONS THAT DO NOT IMPLEMENT SHORT SELLING TECHNIQUES
+## MRS may already have short selling trade PROFIT removed but still lists the trades
+## MAKE IT SO IT ACTUALLY SAVES
+## DETERMINE WHERE ACTION IS STORED IN JSON
 
 results = {}  # creates a directory for the results of the function
 
