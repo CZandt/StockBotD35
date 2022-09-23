@@ -14,15 +14,16 @@ import os  # imports the OS module
 import time  # imports the time module so that alphavantage wont throw a fit
 from termcolor import colored #imports termcolor for the text
 
-tickers = ['TGT', 'DOCU', 'ETSY']#['SPY', 'EXPD', 'TSLA', 'AAPL', 'MSFT', 'NVDA', 'AMD', 'BB', 'SPOT']  # lists out the tickers that the program uses
+tickers = ['SPY', 'EXPD', 'TSLA', 'AAPL', 'MSFT', 'NVDA', 'AMD', 'BB', 'SPOT']  # lists out the tickers that the program uses
 
+uPref = input("Print ever trade? (Y or N)")
 
 def saveResults(results):  # Function to save results to json file
     json.dump(results, open('MacintoshHD/Users/colehardy/Desktop/results.json',
                             'w'))   #LOCATION FOR FILES IS NOT WORKING
 
 
-def meanReversionStrategy(price, ticker):  # Function that contains the meanReversionStrategy
+def meanReversionStrategy(price, ticker, uPref):  # Function that contains the meanReversionStrategy
     day = 0  # records what day it currently is for the program
     buys = 0  # records the number of buys
     rProfit = 0  # rolling profit over all trades
@@ -57,11 +58,13 @@ def meanReversionStrategy(price, ticker):  # Function that contains the meanReve
 
                     buy = current_price  # sets buy price to the current price
 
-                    print('Buying at:', buy)  # prints out what price it is buying at
+                    if uPref == 'Y':
+                        print('Buying at:', buy)  # prints out what price it is buying at
 
                     if buys == 0:  # if no buys have been recorded then it records what the price of the first buy was
                         firstbuy = buy  # records first buy
-                        print('First buy:', buy)  # prints out what the first buy is
+                        if uPref == 'Y':
+                            print('First buy:', buy)  # prints out what the first buy is
 
                     buys += 1  # records that a buy has occured
 
@@ -69,8 +72,9 @@ def meanReversionStrategy(price, ticker):  # Function that contains the meanReve
 
                 if sell != 0:  # if there is a sell saved for short selling it goes into this statement
                     tProfit = round(sell - current_price, 2)  # records the trade profit
-                    print('Short sell at:', current_price)  # records the price it sold the short at
-                    print('Short sell profit:', tProfit)  # records the profit made off the trade
+                    if uPref == 'Y':
+                        print('Short sell at:', current_price)  # records the price it sold the short at
+                        print('Short sell profit:', tProfit)  # records the profit made off the trade
 
                     # rProfit += tProfit # adds the profit from the trade to the rolling profit total
 
@@ -87,25 +91,26 @@ def meanReversionStrategy(price, ticker):  # Function that contains the meanReve
 
                     rProfit += tProfit  # adds the trade profit to the rolling profit variable to keep track of all profits
 
-                    print('Selling at:', current_price)  # Prints what price it is being sold at
-                    print('Trade profit:', tProfit)  # prints the trade profit
+                    if uPref == 'Y':
+                        print('Selling at:', current_price)  # Prints what price it is being sold at
+                        print('Trade profit:', tProfit)  # prints the trade profit
                     buy = 0  # resets the buy price back to 0
 
                     lastSell = day  # records the last time a sell action occurred
 
                 if sell == 0:
                     sell = round(current_price, 2)
-
-                    print('Short sell buy at:', sell)
+                    if uPref == 'Y':
+                        print('Short sell buy at:', sell)
                     lastSSBuy = day  # records the last day that a short sell buy occured
             elif current_price <= buy * 0.93:
                 tProfit = current_price - buy
                 tProfit = round(tProfit, 2)
 
                 #rProfit += tProfit
-
-                print('Short Selling at:', current_price)
-                print('Trade profit:', tProfit)
+                if uPref == 'Y':
+                    print('Short Selling at:', current_price)
+                    print('Trade profit:', tProfit)
                 stoplosses += 1
                 buy = 0
 
@@ -154,7 +159,7 @@ def meanReversionStrategy(price, ticker):  # Function that contains the meanReve
     return returnPer, rProfit, suggestion  # returns the return percentage and Rolling profit and the suggestion out of the function
 
 
-def simpleMovingAverageStrategy(price, ticker):  # defines the simpleMovingAverageStrategy function
+def simpleMovingAverageStrategy(price, ticker, uPref):  # defines the simpleMovingAverageStrategy function
 
     day = 0  # records what day it currently is for the program
     buys = 0  # records the number of buys
@@ -184,12 +189,13 @@ def simpleMovingAverageStrategy(price, ticker):  # defines the simpleMovingAvera
                     current_price = round(current_price, 2)  # rounds current price to 2 decimals
 
                     buy = current_price  # sets buy price to the current price
-
-                    print('Buying at:', buy)  # prints out what price it is buying at
+                    if uPref == 'Y':
+                        print('Buying at:', buy)  # prints out what price it is buying at
 
                     if buys == 0:  # if no buys have been recorded then it records what the price of the first buy was
                         firstbuy = buy  # records first buy
-                        print('First buy:', buy)  # prints out what the first buy is
+                        if uPref == 'Y':
+                            print('First buy:', buy)  # prints out what the first buy is
 
                     buys += 1  # records that a buy has occured
 
@@ -197,8 +203,9 @@ def simpleMovingAverageStrategy(price, ticker):  # defines the simpleMovingAvera
 
                 if sell != 0:  # if there is a sell recorded for short selling
                     tProfit = round(sell - current_price, 2)  # records what the profit was for the trade
-                    print('Short sell at:', current_price)  # prints what the price of the trade is
-                    print('Short sell profit:', tProfit)  # prints the profit for the trade
+                    if uPref == 'Y':
+                        print('Short sell at:', current_price)  # prints what the price of the trade is
+                        print('Short sell profit:', tProfit)  # prints the profit for the trade
 
                     #rProfit += tProfit  # adds the profit from the trade to rolling total
 
@@ -215,16 +222,17 @@ def simpleMovingAverageStrategy(price, ticker):  # defines the simpleMovingAvera
 
                     rProfit += tProfit  # adds the trade profit to the rolling profit variable to keep track of all profits
 
-                    print('Selling at:', current_price)  # Prints what price it is being sold at
-                    print('Trade profit:', tProfit)  # prints the trade profit
+                    if uPref == 'Y':
+                        print('Selling at:', current_price)  # Prints what price it is being sold at
+                        print('Trade profit:', tProfit)  # prints the trade profit
                     buy = 0  # resets the buy price back to 0
 
                     lastSell = day  # records the day of the last sale
 
                 if sell == 0:  # if there is not a sell recorded then it goes into this
                     sell = round(current_price, 2)  # records the price that it bought the short at
-
-                    print('Short sell buy at:', sell)  # prints out what price it bought the short at
+                    if uPref == 'Y':
+                        print('Short sell buy at:', sell)  # prints out what price it bought the short at
                     lastSSBuy = day  # records the day that is the last time that it bought the short
 
                 buy = 0  # sets the buy equal to 0 becuase we sold
@@ -234,9 +242,9 @@ def simpleMovingAverageStrategy(price, ticker):  # defines the simpleMovingAvera
                 tProfit = round(tProfit, 2)
 
                 #rProfit += tProfit REMOVES SHORT SELLING FROM OVERALL TOTAL
-
-                print('Short Selling at:', current_price)
-                print('Trade profit:', tProfit)
+                if uPref == 'Y':
+                    print('Short Selling at:', current_price)
+                    print('Trade profit:', tProfit)
                 stoplosses += 1
                 buy = 0
 
@@ -278,7 +286,7 @@ def simpleMovingAverageStrategy(price, ticker):  # defines the simpleMovingAvera
     return returnPer, rProfit, suggestion  # returns the return percentage and Rolling profit and the suggestion out of the function
 
 
-def bollingerBondsStrategy(price, ticker):
+def bollingerBondsStrategy(price, ticker, uPref):
     day = 0  # records what day it currently is for the program
     buys = 0  # records the number of buys
     rProfit = 0  # rolling profit over all trades
@@ -309,12 +317,13 @@ def bollingerBondsStrategy(price, ticker):
                     current_price = round(current_price, 2)  # rounds current price to 2 decimals
 
                     buy = current_price  # sets buy price to the current price
-
-                    print('Buying at:', buy)  # prints out what price it is buying at
+                    if uPref == 'Y':
+                        print('Buying at:', buy)  # prints out what price it is buying at
 
                     if buys == 0:  # if no buys have been recorded then it records what the price of the first buy was
                         firstbuy = buy  # records first buy
-                        print('First buy:', buy)  # prints out what the first buy is
+                        if uPref == 'Y':
+                            print('First buy:', buy)  # prints out what the first buy is
 
                     buys += 1  # records that a buy has occured
 
@@ -322,8 +331,9 @@ def bollingerBondsStrategy(price, ticker):
 
                 if sell != 0:  # if no sell has been recorded then it goes into the short sell sell statment
                     tProfit = round(sell - current_price, 2)  # calculates the profit for the trade
-                    print('Short sell at:', current_price)  # prints what price the action is taken at
-                    print('Short sell profit:', tProfit)  # Prints out the profit for the trade
+                    if uPref == 'Y':
+                        print('Short sell at:', current_price)  # prints what price the action is taken at
+                        print('Short sell profit:', tProfit)  # Prints out the profit for the trade
 
                     #rProfit += tProfit  # adds the profit to the rolling total of profit
 
@@ -337,17 +347,17 @@ def bollingerBondsStrategy(price, ticker):
                     tProfit = round(tProfit, 2)  # rounds profit to 2 decimal places
 
                     rProfit += tProfit  # adds the trade profit to the rolling profit variable to keep track of all profits
-
-                    print('Selling at:', current_price)  # Prints what price it is being sold at
-                    print('Trade profit:', tProfit)  # prints the trade profit
+                    if uPref == 'Y':
+                        print('Selling at:', current_price)  # Prints what price it is being sold at
+                        print('Trade profit:', tProfit)  # prints the trade profit
                     buy = 0  # resets the buy price back to 0
 
                     lastSell = day  # records the last day that a buy occured
 
                 if sell == 0:
                     sell = round(current_price, 2)  # records what price the short sell buy occured at
-
-                    print('Short sell buy at:', sell)  # Prints out what price the short buy occured
+                    if uPref == 'Y':
+                        print('Short sell buy at:', sell)  # Prints out what price the short buy occured
                     lastSSBuy = day  # records the last day the action occured
 
                 buy = 0  # sets the buy equal to 0 becuase we sold
@@ -357,9 +367,9 @@ def bollingerBondsStrategy(price, ticker):
                 tProfit = round(tProfit, 2)
 
                 #rProfit += tProfit
-
-                print('Short Selling at:', current_price)
-                print('Trade profit:', tProfit)
+                if uPref == 'Y':
+                    print('Short Selling at:', current_price)
+                    print('Trade profit:', tProfit)
                 stoplosses += 1
                 buy = 0
                 lastSell = day
@@ -439,9 +449,9 @@ for ticker in tickers:  # for each ticker in the ticker list it does this
     # for date in cDictionary[key1]: # for each date it does this in the CSV
     # stockdata.write(date + ',' + cDictionary[key1][date][key2] + '\n' ) # this is supposed to save the CSV to the folder data but it is being funky
 
-    meanResult = meanReversionStrategy(prices, ticker)  # save the results from the MRstrat and runs it
-    smaResult = simpleMovingAverageStrategy(prices, ticker)  # saves the results from the SMAstrat and runs it
-    bbResult = bollingerBondsStrategy(prices, ticker)  # saves the results from the BBstrat and runs it
+    meanResult = meanReversionStrategy(prices, ticker, uPref)  # save the results from the MRstrat and runs it
+    smaResult = simpleMovingAverageStrategy(prices, ticker, uPref)  # saves the results from the SMAstrat and runs it
+    bbResult = bollingerBondsStrategy(prices, ticker, uPref)  # saves the results from the BBstrat and runs it
 
     results[f'{ticker}_mr_profit'] = meanResult[1]  # stores the mean reversion profits in the dictionary
 
