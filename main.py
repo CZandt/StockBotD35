@@ -5,6 +5,7 @@
 # 2. PROVIDE OPTION TO REMOVE PRINT STATEMENTS
 # 3. WAY TO COMPARE TICKERS
 # 4. PUSH RECCOMENDATIONS MORE BOLDY
+
 import json
 from operator import attrgetter
 from turtle import color  # imports the json module
@@ -14,7 +15,8 @@ import os  # imports the OS module
 import time  # imports the time module so that alphavantage wont throw a fit
 from termcolor import colored #imports termcolor for the text
 
-tickers = ['SPY', 'EXPD', 'TSLA', 'AAPL', 'MSFT', 'NVDA', 'AMD', 'BB', 'SPOT']  # lists out the tickers that the program uses
+tickers = ['SPY','DOCU']
+#['SPY', 'EXPD', 'TSLA', 'AAPL', 'MSFT', 'NVDA', 'AMD', 'BB', 'SPOT','AMZN','LCID','DOCU']  # lists out the tickers that the program uses
 
 uPref = input("Print ever trade? (Y or N)")
 
@@ -40,6 +42,8 @@ def meanReversionStrategy(price, ticker, uPref):  # Function that contains the m
     stoplosses = 0
     dayZeroValue = 0
     dayEndValue = 0
+    printColor = 'white'
+
     if ticker == 'SPY' or 'EXPD':
         tolerence = [0.97, 1.03]
     else:
@@ -50,8 +54,7 @@ def meanReversionStrategy(price, ticker, uPref):  # Function that contains the m
 
             Avg_price = (sum(price[day - 5:day]) / 5)  # average prive over the last 5 days
 
-            if current_price < Avg_price * tolerence[
-                0]:  # if the current price is under 95% of the average it moves into the buy if statements
+            if current_price < Avg_price * tolerence[0]:  # if the current price is under 95% of the average it moves into the buy if statements
 
                 if buy == 0:  # if no buys have already been done.
                     current_price = round(current_price, 2)  # rounds current price to 2 decimals
@@ -143,18 +146,30 @@ def meanReversionStrategy(price, ticker, uPref):  # Function that contains the m
     print(f'{ticker} MR Total Profit: {rProfit}')  # displays  the total profit of all the trades
     print('Stoplosses Triggered:', stoplosses)
     print('First Buy:', firstbuy)  # prints what the price of the first buy was
-    print(colored(f'{ticker} MR Percentage returns: {returnPer}%', 'green', attrs=['bold']))  # prints what the total return percent
+    print(colored(f'{ticker} MR Percentage returns: {returnPer}%', 'blue', attrs=['bold']))  # prints what the total return percent
+
+
     if suggestion != []:  # if a suggestion had occured
         try:
-            print('Today the strategy suggests to', suggestion[0], 'and', suggestion[1])  # prints out what the suggestion is
+            print('Today the strategy suggests to' + suggestion[0] + 'and', suggestion[1], ' @ $' + str(current_price))  # prints out what the suggestion is
         except:
-            print('Today the strategy suggests to', suggestion[0])  # if only one suggestion is given then this will work so it isnt gonna crash
+            if suggestion[0] == 'Buy':
+                printColor = 'green'
+            elif suggestion[0] == 'Sell':
+                printColor = 'red'
+            else:
+                printColor = 'blue'
+            print(colored('Today the strategy suggests to ' + suggestion[0] + ' @ $' + str(current_price), printColor, attrs=['bold']))  # if only one suggestion is given then this will work so it isnt gonna crash
     else:
         print('Today the strategy suggests to do nothing')  # if no suggestion it prints that it suggests to do nothing
+
+
     print('Hold Return ', round(dayEndValue - dayZeroValue,2), 'Percent: ', round(((dayEndValue / dayZeroValue) - 1) * 100,2),'%' )
     if (returnPer > ((dayEndValue / dayZeroValue) - 1) * 100) :
         print(colored('OUTPERFORMS HOLD', 'red', attrs=['bold']))
     print('----------------------')
+
+    print('Day number: ', day)
 
     return returnPer, rProfit, suggestion  # returns the return percentage and Rolling profit and the suggestion out of the function
 
@@ -176,6 +191,7 @@ def simpleMovingAverageStrategy(price, ticker, uPref):  # defines the simpleMovi
     stoplosses = 0
     dayZeroValue = 0
     dayEndValue = 0
+    printColor = 'white'
 
     for current_price in price:  # for each price in the price list it goes through this equation
 
@@ -270,14 +286,23 @@ def simpleMovingAverageStrategy(price, ticker, uPref):  # defines the simpleMovi
     print('----------------------')
     print(f'{ticker} SMA Total Profit:', rProfit)  # displays  the total profit of all the trades
     print('First Buy:', firstbuy)  # prints what the price of the first buy was
-    print(colored(f'{ticker} SMA Percentage returns: {returnPer}%', 'green', attrs=['bold']))  # prints what the total return percent
+    print(colored(f'{ticker} SMA Percentage returns: {returnPer}%', 'blue', attrs=['bold']))  # prints what the total return percent
+
     if suggestion != []:  # if a suggestion had occured
         try:
-            print('Today the strategy suggests to', suggestion[0], 'and', suggestion[1])  # prints out what the suggestion is
+            print('Today the strategy suggests to' + suggestion[0] + 'and', suggestion[1], ' @ $' + str(current_price))  # prints out what the suggestion is
         except:
-            print('Today the strategy suggests to', suggestion[0])  # if only one suggestion is given then this will work so it isnt gonna crash
+            if suggestion[0] == 'Buy':
+                printColor = 'green'
+            elif suggestion[0] == 'Sell':
+                printColor = 'red'
+            else:
+                printColor = 'blue'
+            print(colored('Today the strategy suggests to ' + suggestion[0] + ' @ $' + str(current_price), printColor, attrs=['bold']))  # if only one suggestion is given then this will work so it isnt gonna crash
     else:
         print('Today the strategy suggests to do nothing')  # if no suggestion it prints that it suggests to do nothing
+
+
     print('Hold Return ', round(dayEndValue - dayZeroValue,2), 'Percent: ', round(((dayEndValue / dayZeroValue) - 1) * 100,2),'%' )
     if (returnPer > ((dayEndValue / dayZeroValue) - 1) * 100) :
         print(colored('OUTPERFORMS HOLD', 'red', attrs=['bold']))
@@ -302,6 +327,7 @@ def bollingerBondsStrategy(price, ticker, uPref):
     stoplosses = 0
     dayZeroValue = 0
     dayEndValue = 0
+    printColor = 'white'
 
     for current_price in price:  # for each price in the price list it goes through this equation
 
@@ -398,14 +424,24 @@ def bollingerBondsStrategy(price, ticker, uPref):
     print('----------------------')
     print(f'{ticker} Bollinger Bonds Total Profit:', rProfit)  # displays  the total profit of all the trades
     print('First Buy:', firstbuy)  # prints what the price of the first buy was
-    print(colored(f'{ticker} Bollinger Bonds Percentage returns: {returnPer}%', 'green', attrs=['bold']))  # prints what the total return percent
+    print(colored(f'{ticker} Bollinger Bonds Percentage returns: {returnPer}%', 'blue', attrs=['bold']))  # prints what the total return percent
+
+
     if suggestion != []:  # if a suggestion had occured
         try:
-            print('Today the strategy suggests to', suggestion[0], 'and', suggestion[1])  # prints out what the suggestion is
+            print('Today the strategy suggests to' + suggestion[0] + 'and', suggestion[1], ' @ $' + str(current_price))  # prints out what the suggestion is
         except:
-            print('Today the strategy suggests to', suggestion[0])  # if only one suggestion is given then this will work so it isnt gonna crash
+            if suggestion[0] == 'Buy':
+                printColor = 'green'
+            elif suggestion[0] == 'Sell':
+                printColor = 'red'
+            else:
+                printColor = 'blue'
+            print(colored('Today the strategy suggests to ' + suggestion[0] + ' @ $' + str(current_price), printColor, attrs=['bold']))  # if only one suggestion is given then this will work so it isnt gonna crash
     else:
         print('Today the strategy suggests to do nothing')  # if no suggestion it prints that it suggests to do nothing
+
+
     print('Stoplosses triggered:', stoplosses)
     print('Hold Return ', round(dayEndValue - dayZeroValue,2), 'Percent: ', round(((dayEndValue / dayZeroValue) - 1) * 100,2),'%' )
     if (returnPer > ((dayEndValue / dayZeroValue) - 1) * 100) :
@@ -414,17 +450,11 @@ def bollingerBondsStrategy(price, ticker, uPref):
 
     return returnPer, rProfit, suggestion  # returns the return percentage and Rolling profit and the suggestion out of the function
 
-## ADD NEW FUNCTIONS THAT DO NOT IMPLEMENT SHORT SELLING TECHNIQUES
-## MRS may already have short selling trade PROFIT removed but still lists the trades
-## MAKE IT SO IT ACTUALLY SAVES
-## DETERMINE WHERE ACTION IS STORED IN JSON
-
 results = {}  # creates a directory for the results of the function
 
 for ticker in tickers:  # for each ticker in the ticker list it does this
     # Goes through each ticker and adds it to the API in a formatted string format to pull new data for each ticker
-    url = (
-        f'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={ticker}&apikey=JJI3NVB2R98E5ILV')  # URl that pulls the data for the ticker
+    url = (f'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={ticker}&apikey=JJI3NVB2R98E5ILV')  # URl that pulls the data for the ticker
     request = requests.get(url)  # saves the json from the request as request
 
     cDictionary = json.loads(request.text)  # loads the json into a dictionary
@@ -457,11 +487,9 @@ for ticker in tickers:  # for each ticker in the ticker list it does this
 
     results[f'{ticker}_mr_returns'] = meanResult[0]  # stores the mean reversion returns in the dictionary
 
-    results[f'{ticker}_mr_suggestion'] = meanResult[
-        2]  # stores the suggested action for the mean reversion in the dictionary
+    results[f'{ticker}_mr_suggestion'] = meanResult[2]  # stores the suggested action for the mean reversion in the dictionary
 
-    results[f'{ticker}_sma_suggestion'] = smaResult[
-        2]  # stores the suggested action for the simple moving average in the dictionary
+    results[f'{ticker}_sma_suggestion'] = smaResult[2]  # stores the suggested action for the simple moving average in the dictionary
 
     results[f'{ticker}_sma_profit'] = smaResult[1]  # stores the simple moving average profits in the dictionary
 
@@ -478,6 +506,3 @@ for ticker in tickers:  # for each ticker in the ticker list it does this
     time.sleep(12)
 
     #saveResults(results) #calls the results function and saves the results dictionary as a json file
-
-
-
