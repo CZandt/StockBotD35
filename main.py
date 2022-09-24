@@ -14,12 +14,17 @@ import statistics as stat  # imports stat module for math calculations
 import os  # imports the OS module
 import time  # imports the time module so that alphavantage wont throw a fit
 from termcolor import colored #imports termcolor for the text
+import Trade #imports the trade class
+import TradeQue #imports the tradeQue class
+from datetime import date
+from random import random
 
-tickers = ['SPY','DOCU']
-#['SPY', 'EXPD', 'TSLA', 'AAPL', 'MSFT', 'NVDA', 'AMD', 'BB', 'SPOT','AMZN','LCID','DOCU']  # lists out the tickers that the program uses
-
+tickers = ['SPY', 'EXPD', 'TSLA', 'AAPL', 'MSFT', 'NVDA', 'AMD', 'BB', 'SPOT','AMZN','LCID','DOCU','SBUX','NKE','GOOG','EA','DIS','GE','LULU','PLUG','GME','AAL','NVR','SEB','MMM','ATVI','AFL']  # lists out the tickers that the program uses
+#['SPY','DOCU']
 uPref = input("Print ever trade? (Y or N)")
 
+theTradeQue = TradeQue.TradeQue()
+today = date.today()
 def saveResults(results):  # Function to save results to json file
     json.dump(results, open('MacintoshHD/Users/colehardy/Desktop/results.json',
                             'w'))   #LOCATION FOR FILES IS NOT WORKING
@@ -171,7 +176,7 @@ def meanReversionStrategy(price, ticker, uPref):  # Function that contains the m
 
     print('Day number: ', day)
 
-    return returnPer, rProfit, suggestion  # returns the return percentage and Rolling profit and the suggestion out of the function
+    return returnPer, rProfit, suggestion, current_price  # returns the return percentage and Rolling profit and the suggestion out of the function
 
 
 def simpleMovingAverageStrategy(price, ticker, uPref):  # defines the simpleMovingAverageStrategy function
@@ -308,7 +313,7 @@ def simpleMovingAverageStrategy(price, ticker, uPref):  # defines the simpleMovi
         print(colored('OUTPERFORMS HOLD', 'red', attrs=['bold']))
     print('----------------------')
 
-    return returnPer, rProfit, suggestion  # returns the return percentage and Rolling profit and the suggestion out of the function
+    return returnPer, rProfit, suggestion, current_price  # returns the return percentage and Rolling profit and the suggestion out of the function
 
 
 def bollingerBondsStrategy(price, ticker, uPref):
@@ -448,7 +453,7 @@ def bollingerBondsStrategy(price, ticker, uPref):
         print(colored('OUTPERFORMS HOLD', 'red', attrs=['bold']))
     print('----------------------')
 
-    return returnPer, rProfit, suggestion  # returns the return percentage and Rolling profit and the suggestion out of the function
+    return returnPer, rProfit, suggestion, current_price  # returns the return percentage and Rolling profit and the suggestion out of the function
 
 results = {}  # creates a directory for the results of the function
 
@@ -501,8 +506,18 @@ for ticker in tickers:  # for each ticker in the ticker list it does this
 
     results[f'{ticker}_bb_suggestion'] = bbResult[2]  # stores the bollinger bonds suggested action in the dictionary
 
-    # print('Test indicator =', testindicator)
+    #CREATES A CLASS FOR A TRADE AND ADDS IT TO QUE IF IT A BUY OR SELL
+    if meanResult[2] == ['Buy'] or meanResult[2] == ['Sell']:
+        theTradeQue.addTradetoQue(ticker,today.strftime("%m/%d/%y"), meanResult[3], 1, round((random() % 10000) * 10000, 0),meanResult[2],"Mean Reversion")
+
+    if smaResult[2] == ['Buy'] or smaResult[2] == ['Sell']:
+        theTradeQue.addTradetoQue(ticker, today.strftime("%m/%d/$y"), smaResult[3], 1, round((random() % 10000) * 10000, 0), smaResult[2], "Simple Moving Average")
+    
+    if bbResult[2] == ['Buy'] or bbResult[2] == ['Sell']:
+        theTradeQue.addTradetoQue(ticker, today.strftime("%m/%d/%y"), bbResult[3], 1,round((random() % 10000) * 10000, 0),bbResult[2], "Bollinger Bonds")
+
 
     time.sleep(12)
+  #saveResults(results) #calls the results function and saves the results dictionary as a json file
 
-    #saveResults(results) #calls the results function and saves the results dictionary as a json file
+theTradeQue.displayTradeQue()
