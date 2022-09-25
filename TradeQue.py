@@ -16,8 +16,8 @@ class TradeQue :
         self.tradeHistory = [] #Creates a list to store the history of trades
         self.tradeQue = [] #creates a list to store the trades that are qued
 
-    def addTradetoQue(self, tradeTicker, tradeDate, tradePrice, tradeShares, tradeID, tradeAction, tradeAlg): #creates a trade object and adds it to the trade que list
-        self.tradeQue.append(Trade.Trade(tradeTicker, tradeDate, tradePrice, tradeShares, tradeID, tradeAction, tradeAlg))
+    def addTradetoQue(self, tradeTicker, tradeDate, tradePrice, tradeShares, tradeID, tradeAction, tradeAlg, lastHundredGain): #creates a trade object and adds it to the trade que list
+        self.tradeQue.append(Trade.Trade(tradeTicker, tradeDate, tradePrice, tradeShares, tradeID, tradeAction, tradeAlg,lastHundredGain))
     
     def addTradetoHistory(self, tradeID): #Switches a trade object from the que list to the history list
         try:
@@ -40,6 +40,7 @@ class TradeQue :
             print("\t Price: $" + str(self.tradeQue[i].returnPrice()))
             print("\t Shares:", self.tradeQue[i].returnShares())
             print("\t Trade ID:", self.tradeQue[i].returnTradeID())
+            print("\t Last 100 Day Returns: " + str(self.tradeQue[i].returnLastHundredGain()) + '%')
             print()
         print("--- END OF TRADE QUE ---")
 
