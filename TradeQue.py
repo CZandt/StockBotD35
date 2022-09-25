@@ -15,10 +15,12 @@ class TradeQue :
     def __init__(self):
         self.tradeHistory = [] #Creates a list to store the history of trades
         self.tradeQue = [] #creates a list to store the trades that are qued
+        self.tradeID = 0
 
-    def addTradetoQue(self, tradeTicker, tradeDate, tradePrice, tradeShares, tradeID, tradeAction, tradeAlg, lastHundredGain): #creates a trade object and adds it to the trade que list
-        self.tradeQue.append(Trade.Trade(tradeTicker, tradeDate, tradePrice, tradeShares, tradeID, tradeAction, tradeAlg,lastHundredGain))
-    
+    def addTradetoQue(self, tradeTicker, tradeDate, tradePrice, tradeShares, tradeAction, tradeAlg, lastHundredGain): #creates a trade object and adds it to the trade que list
+        self.tradeQue.append(Trade.Trade(tradeTicker, tradeDate, tradePrice, tradeShares, tradeAction, tradeAlg,lastHundredGain,self.tradeID))
+        self.tradeID += 1
+        
     def addTradetoHistory(self, tradeID): #Switches a trade object from the que list to the history list
         try:
             for i in range(len(self.tradeQue)) : #goes through each trade in the que

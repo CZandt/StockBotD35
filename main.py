@@ -25,9 +25,12 @@ import bollingerBonds
 import magi
 
 #tickers = ['SPY','DOCU', 'EXPD', 'TSLA', 'AAPL', 'MSFT', 'NVDA', 'AMD', 'BB', 'SPOT','AMZN','LCID','SBUX','NKE','GOOG','EA','DIS','GE','LULU','PLUG','GME','AAL','NVR','SEB','MMM','ATVI','AFL','AME','T','BBY','COF','KO','CMCSA','COST','F','GM','GS','HON','JNJ','K','MAR','NFLX','QCOM','RTX','CRM','LUV','USB','V','YUM']  # lists out the tickers that the program uses
-#['SPY','DOCU']
+tickers = ['SPY','DOCU','NFLX','PLUG','RTX','GME']
 
-tickers = ['SPY','EXPD','NVDA','AAPL','MSFT','AMZN']#['BB','PLUG','SPOT','NFLX','DOCU','RTX','AAL','GME','LULU'] #ALL THESE SHOW POTENTIAL FOR REAL WORLD IMPLEMENTATION
+#tickers = ['UK','SBEV','CASI','TQQQ','SQQQ','CCL']
+# YOU INVESTED ON DOCU BB MAKE SURE TO CHECK DAILY!!!!
+
+#tickers = ['SPY','EXPD','NVDA','AAPL','MSFT','AMZN']#['BB','PLUG','SPOT','NFLX','DOCU','RTX','AAL','GME','LULU'] #ALL THESE SHOW POTENTIAL FOR REAL WORLD IMPLEMENTATION
 
 
 uPref = input("Print ever trade? (Y or N)")
@@ -94,13 +97,13 @@ for ticker in tickers:  # for each ticker in the ticker list it does this
 
     #CREATES A CLASS FOR A TRADE AND ADDS IT TO QUE IF IT A BUY OR SELL
     if meanResult[2] == ['Buy'] or meanResult[2] == ['Sell']: #creates an object in the trade que to represent a trade that is to be placed
-        theTradeQue.addTradetoQue(ticker,today.strftime("%m/%d/%y"), meanResult[3], 1, round((random() % 10000) * 10000, 0),meanResult[2],"Mean Reversion",meanResult[1])
+        theTradeQue.addTradetoQue(ticker,today.strftime("%m/%d/%y"), meanResult[3], 1,meanResult[2],"Mean Reversion",meanResult[0])
 
     if smaResult[2] == ['Buy'] or smaResult[2] == ['Sell']: #for SMA
-        theTradeQue.addTradetoQue(ticker, today.strftime("%m/%d/%y"), smaResult[3], 1, round((random() % 10000) * 10000, 0), smaResult[2], "Simple Moving Average",smaResult[1])
+        theTradeQue.addTradetoQue(ticker, today.strftime("%m/%d/%y"), smaResult[3], 1, smaResult[2], "Simple Moving Average",smaResult[0])
     
     if bbResult[2] == ['Buy'] or bbResult[2] == ['Sell']: # for BB
-        theTradeQue.addTradetoQue(ticker, today.strftime("%m/%d/%y"), bbResult[3], 1,round((random() % 10000) * 10000, 0),bbResult[2], "Bollinger Bonds",bbResult[1])
+        theTradeQue.addTradetoQue(ticker, today.strftime("%m/%d/%y"), bbResult[3], 1,bbResult[2], "Bollinger Bonds",bbResult[0])
 
     #if magi33Result[2] == ['Buy'] or magi33Result == ['Sell']: #for MAGI33
         #theTradeQue.addTradetoQue(ticker,today.strftime("%m/%d/%y"), magi33Result[3],1, 312324, magi33Result[2],"MAGI 33", magi33Result[1])

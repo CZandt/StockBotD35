@@ -8,15 +8,15 @@
 
 class Trade: #class to represent a trade and all of its properties 
 
-    def __init__(self, tradeTicker, tradeDate, tradePrice, tradeShares, tradeID, tradeAction, tradeAlg,lastHundredGain) :
+    def __init__(self, tradeTicker, tradeDate, tradePrice, tradeShares, tradeAction, tradeAlg,lastHundredGain,tradeID) :
         self.tradeTicker = tradeTicker #Stores the ticker for the trade
         self.tradeDate = tradeDate #Stores the date for the trade
         self.tradePrice = tradePrice #Stores the suggested price for the trade
         self.tradeShares = tradeShares #stores the amount of shares that are too be bought with the trade
-        self.tradeID = tradeID #IDs the trade with a unique identifier
         self.tradeAction = tradeAction #Records if the trade is a buy or sell trade
         self.tradeAlg = tradeAlg #Records the algorithim that is used for the trade
         self.lastHundredGain = lastHundredGain
+        self.tradeID = tradeID
 
     def returnTicker(self) :
         return self.tradeTicker #Method to return the trade ticker

@@ -100,8 +100,7 @@ def bollingerBondsStrategy(price, ticker, uPref): #Defines the bollingerBonds tr
             suggestion.append('Sell')
 
 
-    returnPer = round((rProfit / firstbuy) * 100,
-                      2)  # calculates the percentage return over all trades and rounds it to 2 decimal places
+    returnPer = round((rProfit / firstbuy) * 100, 2)  # calculates the percentage return over all trades and rounds it to 2 decimal places
     rProfit = round(rProfit, 2)  # rounds the rolling profit to 2 decimal places
     print('----------------------')
     print(f'{ticker} Bollinger Bonds Total Profit:', rProfit)  # displays  the total profit of all the trades
