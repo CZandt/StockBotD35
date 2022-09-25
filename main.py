@@ -1,11 +1,11 @@
 # final_project
 
 # TO DO 
-# 1. REMOVE SHORT SELL PRINTS
-# 2. PROVIDE OPTION TO REMOVE PRINT STATEMENTS
-# 3. WAY TO COMPARE TICKERS
-# 4. PUSH RECCOMENDATIONS MORE BOLDY
+# MAKE A BETTER TRADE ID SEQUENCE WHICH INCLUDES A COMBINATION OF DATETIME,TICKER,AND,PRICE
+#START INTEGRATING WITH TRADING API SO THAT IT CAN TRADE ON ITS OWN
+# CREATE ALGORITHIMS FOR HIGH FREQUENCY TRADING (BETA)
 
+from cgi import test
 import json
 from operator import attrgetter
 from turtle import color  # imports the json module
@@ -14,20 +14,18 @@ import statistics as stat  # imports stat module for math calculations
 import os  # imports the OS module
 import time  # imports the time module so that alphavantage wont throw a fit
 from termcolor import colored #imports termcolor for the text
-import Trade #imports the trade class
 import TradeQue #imports the tradeQue class
 from datetime import date
 from random import random
 
-tickers = ['SPY', 'EXPD', 'TSLA', 'AAPL', 'MSFT', 'NVDA', 'AMD', 'BB', 'SPOT','AMZN','LCID','DOCU','SBUX','NKE','GOOG','EA','DIS','GE','LULU','PLUG','GME','AAL','NVR','SEB','MMM','ATVI','AFL']  # lists out the tickers that the program uses
+tickers = ['SPY','DOCU', 'EXPD', 'TSLA', 'AAPL', 'MSFT', 'NVDA', 'AMD', 'BB', 'SPOT','AMZN','LCID','SBUX','NKE','GOOG','EA','DIS','GE','LULU','PLUG','GME','AAL','NVR','SEB','MMM','ATVI','AFL','AME','T','BBY','COF','KO','CMCSA','COST','F','GM','GS','HON','JNJ','K','MAR','NFLX','QCOM','RTX','CRM','LUV','USB','V','YUM']  # lists out the tickers that the program uses
 #['SPY','DOCU']
 uPref = input("Print ever trade? (Y or N)")
 
 theTradeQue = TradeQue.TradeQue()
 today = date.today()
 def saveResults(results):  # Function to save results to json file
-    json.dump(results, open('MacintoshHD/Users/colehardy/Desktop/results.json',
-                            'w'))   #LOCATION FOR FILES IS NOT WORKING
+    json.dump(results, open('MacintoshHD/Users/colehardy/Desktop/results.json','w'))   #LOCATION FOR FILES IS NOT WORKING
 
 
 def meanReversionStrategy(price, ticker, uPref):  # Function that contains the meanReversionStrategy
@@ -136,11 +134,13 @@ def meanReversionStrategy(price, ticker, uPref):  # Function that contains the m
         if day - 1 == lastBuy:  # appends a buy sign to the suggestion list if a buy occured on the last day
             suggestion.append('Buy')
         if day - 1 == lastSSSell:  # appends a cash in the short sign to the suggestion list if a lastSSSell occured on the last day
-            suggestion.append('Cash in the Short')
+            #suggestion.append('Cash in the Short')
+            pass
         if day - 1 == lastSell:  # appends a sell suggestion to the suggestion list if a sell occured on the last day
             suggestion.append('Sell')
         if day - 1 == lastSSBuy:  # appends a buy the short sign to the suggestion list if a short buy occured on the last day
-            suggestion.append('Buy the Short')
+            pass
+            #suggestion.append('Buy the Short')
 
     if buys != 0:
         returnPer = (rProfit / firstbuy) * 100  # calculates the return percentage over all the trades
@@ -173,8 +173,6 @@ def meanReversionStrategy(price, ticker, uPref):  # Function that contains the m
     if (returnPer > ((dayEndValue / dayZeroValue) - 1) * 100) :
         print(colored('OUTPERFORMS HOLD', 'red', attrs=['bold']))
     print('----------------------')
-
-    print('Day number: ', day)
 
     return returnPer, rProfit, suggestion, current_price  # returns the return percentage and Rolling profit and the suggestion out of the function
 
@@ -280,11 +278,13 @@ def simpleMovingAverageStrategy(price, ticker, uPref):  # defines the simpleMovi
         if day - 1 == lastBuy:  # appends a buy sign to the suggestion list if a buy occured on the last day
             suggestion.append('Buy')
         if day - 1 == lastSSSell:  # appends a cash in the short sign to the suggestion list if a lastSSSell occured on the last day
-            suggestion.append('Cash in the Short')
+            pass
+            #suggestion.append('Cash in the Short')
         if day - 1 == lastSell:  # appends a sell suggestion to the suggestion list if a sell occured on the last day
             suggestion.append('Sell')
         if day - 1 == lastSSBuy:  # appends a buy the short sign to the suggestion list if a short buy occured on the last day
-            suggestion.append('Buy the Short')
+            #suggestion.append('Buy the Short')
+            pass
 
     returnPer = round((rProfit / firstbuy) * 100,2)  # calculates the percentage return over all trades and rounds it to 2 decimal places
     rProfit = round(rProfit, 2)  # rounds the rolling profit to 2 decimal places
@@ -316,7 +316,7 @@ def simpleMovingAverageStrategy(price, ticker, uPref):  # defines the simpleMovi
     return returnPer, rProfit, suggestion, current_price  # returns the return percentage and Rolling profit and the suggestion out of the function
 
 
-def bollingerBondsStrategy(price, ticker, uPref):
+def bollingerBondsStrategy(price, ticker, uPref): #Defines the bollingerBonds trading strategy function (once a day price variation changes)
     day = 0  # records what day it currently is for the program
     buys = 0  # records the number of buys
     rProfit = 0  # rolling profit over all trades
@@ -487,6 +487,7 @@ for ticker in tickers:  # for each ticker in the ticker list it does this
     meanResult = meanReversionStrategy(prices, ticker, uPref)  # save the results from the MRstrat and runs it
     smaResult = simpleMovingAverageStrategy(prices, ticker, uPref)  # saves the results from the SMAstrat and runs it
     bbResult = bollingerBondsStrategy(prices, ticker, uPref)  # saves the results from the BBstrat and runs it
+    
 
     results[f'{ticker}_mr_profit'] = meanResult[1]  # stores the mean reversion profits in the dictionary
 
@@ -507,17 +508,17 @@ for ticker in tickers:  # for each ticker in the ticker list it does this
     results[f'{ticker}_bb_suggestion'] = bbResult[2]  # stores the bollinger bonds suggested action in the dictionary
 
     #CREATES A CLASS FOR A TRADE AND ADDS IT TO QUE IF IT A BUY OR SELL
-    if meanResult[2] == ['Buy'] or meanResult[2] == ['Sell']:
+    if meanResult[2] == ['Buy'] or meanResult[2] == ['Sell']: #creates an object in the trade que to represent a trade that is to be placed
         theTradeQue.addTradetoQue(ticker,today.strftime("%m/%d/%y"), meanResult[3], 1, round((random() % 10000) * 10000, 0),meanResult[2],"Mean Reversion")
 
-    if smaResult[2] == ['Buy'] or smaResult[2] == ['Sell']:
-        theTradeQue.addTradetoQue(ticker, today.strftime("%m/%d/$y"), smaResult[3], 1, round((random() % 10000) * 10000, 0), smaResult[2], "Simple Moving Average")
+    if smaResult[2] == ['Buy'] or smaResult[2] == ['Sell']: #for SMA
+        theTradeQue.addTradetoQue(ticker, today.strftime("%m/%d/%y"), smaResult[3], 1, round((random() % 10000) * 10000, 0), smaResult[2], "Simple Moving Average")
     
-    if bbResult[2] == ['Buy'] or bbResult[2] == ['Sell']:
+    if bbResult[2] == ['Buy'] or bbResult[2] == ['Sell']: # for BB
         theTradeQue.addTradetoQue(ticker, today.strftime("%m/%d/%y"), bbResult[3], 1,round((random() % 10000) * 10000, 0),bbResult[2], "Bollinger Bonds")
 
 
-    time.sleep(12)
+    time.sleep(12) # waits 
   #saveResults(results) #calls the results function and saves the results dictionary as a json file
 
-theTradeQue.displayTradeQue()
+theTradeQue.displayTradeQue() #displays the trades that are in the que to be placed

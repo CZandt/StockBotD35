@@ -6,40 +6,40 @@
 
 #Intializers, Add, and returns? That is it?
 
-class Trade:
+class Trade: #class to represent a trade and all of its properties 
 
     def __init__(self, tradeTicker, tradeDate, tradePrice, tradeShares, tradeID, tradeAction, tradeAlg) :
-        self.tradeTicker = tradeTicker
-        self.tradeDate = tradeDate
-        self.tradePrice = tradePrice
-        self.tradeShares = tradeShares
-        self.tradeID = tradeID
-        self.tradeAction = tradeAction
-        self.tradeAlg = tradeAlg
+        self.tradeTicker = tradeTicker #Stores the ticker for the trade
+        self.tradeDate = tradeDate #Stores the date for the trade
+        self.tradePrice = tradePrice #Stores the suggested price for the trade
+        self.tradeShares = tradeShares #stores the amount of shares that are too be bought with the trade
+        self.tradeID = tradeID #IDs the trade with a unique identifier
+        self.tradeAction = tradeAction #Records if the trade is a buy or sell trade
+        self.tradeAlg = tradeAlg #Records the algorithim that is used for the trade
 
     def returnTicker(self) :
-        return self.tradeTicker
+        return self.tradeTicker #Method to return the trade ticker
 
     def returnDate(self) :
-        return self.tradeDate
+        return self.tradeDate #Method to return the date that the trade is for 
 
     def returnPrice(self) :
-        return self.tradePrice
+        return self.tradePrice #Method to the return the price that the trade is supposed to be issued at 
 
     def returnShares(self) :
-        return self.tradeShares
+        return self.tradeShares #Method to return the amount shares that are supposed to be traded with the trade
 
-    def returnTradeID(self) :
+    def returnTradeID(self) : #Method to return the TradeID for the trade
         return self.tradeID
     
-    def returnTradeAction(self) :
+    def returnTradeAction(self) : #Convers the funky list format for the trade action and then the normal type for the trade
         if self.tradeAction == ['Buy']:
             self.tradeAction = 'Buy'
         if self.tradeAction == ['Sell']:
             self.tradeAction = 'Sell'
-            
+
         return self.tradeAction
 
-    def returnTradeAlg(self) :
+    def returnTradeAlg(self) : #Returns the algorithim that was used to determine that the trade should be executed
         return self.tradeAlg
     
