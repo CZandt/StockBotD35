@@ -1,11 +1,10 @@
 # final_project
 
 # TO DO 
-# MAKE A BETTER TRADE ID SEQUENCE WHICH INCLUDES A COMBINATION OF DATETIME,TICKER,AND,PRICE
-#PUT EACH ALG IN ITS OWN PYTHON FILE TO CLEAN UP FILE
 #START INTEGRATING WITH TRADING API SO THAT IT CAN TRADE ON ITS OWN
 # CREATE ALGORITHIMS FOR HIGH FREQUENCY TRADING (BETA)
-# ADD A 4th ALG THAT SIMILAR TO THE MAGI WILL ONLY BUY/SELL IF 2/3 or 3/3 of the other algs agree with each other
+    #High frequency intra day trading should be another main type file becaues of the vast differences.
+    #Additionally should not be prioritized over hooking up to TD ameritrade trading API
 
 from cgi import test
 import json
@@ -25,7 +24,7 @@ import bollingerBonds
 import magi
 
 #tickers = ['SPY','DOCU', 'EXPD', 'TSLA', 'AAPL', 'MSFT', 'NVDA', 'AMD', 'BB', 'SPOT','AMZN','LCID','SBUX','NKE','GOOG','EA','DIS','GE','LULU','PLUG','GME','AAL','NVR','SEB','MMM','ATVI','AFL','AME','T','BBY','COF','KO','CMCSA','COST','F','GM','GS','HON','JNJ','K','MAR','NFLX','QCOM','RTX','CRM','LUV','USB','V','YUM']  # lists out the tickers that the program uses
-tickers = ['SPY','DOCU','NFLX','PLUG','RTX','GME']
+tickers = ['DOCU','NFLX','PLUG','RTX','GME','BB']
 
 #tickers = ['UK','SBEV','CASI','TQQQ','SQQQ','CCL']
 # YOU INVESTED ON DOCU BB MAKE SURE TO CHECK DAILY!!!!
@@ -34,6 +33,7 @@ tickers = ['SPY','DOCU','NFLX','PLUG','RTX','GME']
 
 
 uPref = input("Print ever trade? (Y or N)")
+
 
 theTradeQue = TradeQue.TradeQue()
 today = date.today()
@@ -116,4 +116,5 @@ for ticker in tickers:  # for each ticker in the ticker list it does this
     time.sleep(12) # waits 
   #saveResults(results) #calls the results function and saves the results dictionary as a json file
 
+# ADD IN CODE FOR A MENU AND ITEMIZED THINGS TO PRINT QUE AND ALL THAT JAZZ
 theTradeQue.displayTradeQue() #displays the trades that are in the que to be placed

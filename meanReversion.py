@@ -129,6 +129,8 @@ def meanReversionStrategy(price, ticker, uPref) :
     print('Hold Return ', round(dayEndValue - dayZeroValue,2), 'Percent: ', round(((dayEndValue / dayZeroValue) - 1) * 100,2),'%' )
     if (returnPer > ((dayEndValue / dayZeroValue) - 1) * 100) :
         print(colored('OUTPERFORMS HOLD', 'red', attrs=['bold']))
+
+    print('Days elapsed:',day)
     print('----------------------')
 
     return returnPer, rProfit, suggestion, current_price  # returns the return percentage and Rolling profit and the suggestion out of the function
