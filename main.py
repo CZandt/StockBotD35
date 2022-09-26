@@ -22,9 +22,10 @@ import meanReversion
 import simpleMovingAverage
 import bollingerBonds
 import magi
+import menu
 
 #tickers = ['SPY','DOCU', 'EXPD', 'TSLA', 'AAPL', 'MSFT', 'NVDA', 'AMD', 'BB', 'SPOT','AMZN','LCID','SBUX','NKE','GOOG','EA','DIS','GE','LULU','PLUG','GME','AAL','NVR','SEB','MMM','ATVI','AFL','AME','T','BBY','COF','KO','CMCSA','COST','F','GM','GS','HON','JNJ','K','MAR','NFLX','QCOM','RTX','CRM','LUV','USB','V','YUM']  # lists out the tickers that the program uses
-tickers = ['DOCU','NFLX','PLUG','RTX','GME','BB']
+tickers = ['DOCU','NFLX','PLUG'] #'RTX','GME','BB']
 
 #tickers = ['UK','SBEV','CASI','TQQQ','SQQQ','CCL']
 # YOU INVESTED ON DOCU BB MAKE SURE TO CHECK DAILY!!!!
@@ -117,4 +118,41 @@ for ticker in tickers:  # for each ticker in the ticker list it does this
   #saveResults(results) #calls the results function and saves the results dictionary as a json file
 
 # ADD IN CODE FOR A MENU AND ITEMIZED THINGS TO PRINT QUE AND ALL THAT JAZZ
-theTradeQue.displayTradeQue() #displays the trades that are in the que to be placed
+
+print('---------------')
+print('Calculations Complete')
+print('---------------')
+
+tradeMenuKey = 0
+tradeMenuInput = 0
+
+while tradeMenuKey == 0:
+    menu.tradeMenu()
+    tradeMenuInput = int(input('MENU OPTION: '))
+
+    if tradeMenuInput == 1:
+        menu.printTradeSuggestions(theTradeQue)
+
+    elif tradeMenuInput == 2:
+        menu.selectTradesToExecute(theTradeQue)
+    
+    elif tradeMenuInput == 3:
+        menu.printTradesToExecute(theTradeQue)
+    
+    elif tradeMenuInput == 4:
+        menu.executeTrades(theTradeQue)
+
+    elif tradeMenuInput == 5:
+        menu.printTradeHistory(theTradeQue)
+    
+    elif tradeMenuInput == 6:
+        tradeMenuKey = 1
+    
+    else:
+        print('INVALID INPUT ONLY USE INT 1-6')
+
+print('CLOSING MENU')
+    
+
+
+#theTradeQue.displayTradeQue() #displays the trades that are in the que to be placed
