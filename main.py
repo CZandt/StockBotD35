@@ -33,7 +33,7 @@ tickers = ['DOCU','NFLX','PLUG','RTX','GME','BB']
 
 
 uPref = input("Print ever trade? (Y or N)")
-
+ 
 
 theTradeQue = TradeQue.TradeQue()
 today = date.today()

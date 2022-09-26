@@ -1,11 +1,7 @@
 from cgi import test
-import json
 from operator import attrgetter
 from turtle import color  # imports the json module
-import requests  # imports requests
 import statistics as stat  # imports stat module for math calculations
-import os  # imports the OS module
-import time  # imports the time module so that alphavantage wont throw a fit
 from termcolor import colored #imports termcolor for the text
 from datetime import date
 from random import random
